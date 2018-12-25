@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -17,6 +18,8 @@ import java.util.Set;
 @Service
 public class MapToOutput {
 
+	@Autowired
+	private DisplayTimeInnerMap innerMap;
     List<Object> inside = new ArrayList<>();
     List<String> output_value = new ArrayList<>();
     List<String> output_key = new ArrayList<>();
@@ -53,6 +56,7 @@ public class MapToOutput {
     	Map<String, Object> map= new HashMap<>();
     	Map<String, Object> map2= new HashMap<>();
     	Map<String, Object> map3= new HashMap<>();
+    	Map<String, Object> map4= new HashMap<>();
     	Map<String,Object> innermap = new HashMap<>();
     	root = mapper.readTree(new File("MappingFile.json"));
     	
@@ -66,6 +70,7 @@ public class MapToOutput {
     	map2 = mapper.convertValue(local2,Map.class); //mapped version of faultFields
     	List<Map<String,Object>> innerList = mapper.convertValue(local3, List.class); // Array of alarmAdditionalInformation
     	
+    	map3 = innerMap.breakInnerMappingFile(local2);
     	
     	for(String keys: map.keySet()) {
     		Object matched =getMatchedValue(input_map, map.get(keys).toString());
@@ -73,9 +78,6 @@ public class MapToOutput {
     		map.put(keys, matched);
     		
     	}
-    	
-    	
-    	
     	int index=0 ;
     	for(Map<String,Object> in : innerList) {
     		Object val = getMatchedValue(input_map, in.get("name").toString());
@@ -84,22 +86,16 @@ public class MapToOutput {
     		index++;
     	}
     	
-    	
-    	/*for(String keys: map3.keySet()) {
-    		
-    		
-    		if(!(map3.get(keys) instanceof ArrayList)) {
-    		innermap = mapper.convertValue(map3.get(keys), Map.class);
-    		
-    		Object matched =getMatchedValue(innermap, keys);
+    	System.out.println(map3);
+    	for(String keys: map3.keySet()) {
+    		Object matched =getMatchedValue(input_map, map3.get(keys).toString());
     		if(matched != null)
-    		map.put(keys, matched);
-    		}
-    		//System.out.println(map);
-    	}*/
+    		map4.put(keys, matched);
+    		
+    	}
     	
     	map2.put("alarmAdditionalInformation",innerList ); 
-    	
+    	insideLocal.put("faultFields", map4);
     	insideLocal.put("commonEventHeader", map);
     	insideLocal.put("faultFields", map2);
     	mainLocal.put("event", insideLocal);
