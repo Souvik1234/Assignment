@@ -1,0 +1,39 @@
+{
+	"event": {
+		"commonEventHeader": {
+			"sourceId": "target",
+			"startEpochMicrosec": 1413378172000000,
+			"eventId": "ab305d54-85b4-a31b-7db2-fb6b977766",
+			"sequence": 0,
+			"domain": "fault",
+			"lastEpochMicrosec": 1413378172000033,
+			"eventName": "Fault_Route_Status",
+			"sourceName": "target",
+			"priority": "High",
+			"version": 3.0,
+			"reportingEntityName": "Domain_Contorller"
+		},
+		"faultFields": {
+			"eventSeverity": "CRITICAL",
+			"alarmCondition": "Route_Status",
+			"faultFieldsVersion": 2.0,
+			"specificProblem": "Fault_SOTN_Service_Status",
+			"alarmAdditionalInformation": [
+				{
+					"name": "target",
+					"value": ""
+				},
+				{
+					"name": "tp-id",
+					"value": ""
+				},
+				{
+					"name": "oper-status",
+					"value": ""
+				}
+			],
+			"eventSourceType": "other",
+			"vfStatus": "Active"
+		}
+	}
+}
