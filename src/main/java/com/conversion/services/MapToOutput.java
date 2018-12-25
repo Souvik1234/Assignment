@@ -26,13 +26,13 @@ public class MapToOutput {
     Map<String, Object> input_map;
     public Map<Object,Object> printOutPutJson(JsonNode input,Map<String, Object> input_map, List<Object> mappingFile){
     	this.input_map = input_map;
-        System.out.println("*****************************************************************************");
+        
             for (String inputKey: input_map.keySet()) {
 
                for(Object o: mappingFile){
                    if(o.equals(inputKey)) {
                        Object s = getMatchedValue(input_map, inputKey);
-                       System.out.println(inputKey + "--->" + s);
+                       
                        output_total.put(inputKey, s);
                    }
                }
@@ -56,33 +56,30 @@ public class MapToOutput {
     	Map<String,Object> innermap = new HashMap<>();
     	root = mapper.readTree(new File("MappingFile.json"));
     	
-    	mainLocal = mapper.convertValue(root, Map.class);
+    	mainLocal = mapper.convertValue(root, Map.class); //getting Mapping File
 
-    	local =root.path("event").path("commonEventHeader");
+    	local =root.path("event").path("commonEventHeader"); 
     	local2=root.path("event").path("faultFields");
     	local3=root.path("event").path("faultFields").path("alarmAdditionalInformation");
     	
-    	map = mapper.convertValue(local,Map.class);
-    	map2 = mapper.convertValue(local2,Map.class);
-    	List<Map<String,Object>> innerList = mapper.convertValue(local3, List.class);
-    	map3 = mapper.convertValue(local2,Map.class);
-    	//System.out.println(map);
+    	map = mapper.convertValue(local,Map.class); //mapped version of commonEventHeader
+    	map2 = mapper.convertValue(local2,Map.class); //mapped version of faultFields
+    	List<Map<String,Object>> innerList = mapper.convertValue(local3, List.class); // Array of alarmAdditionalInformation
+    	
+    	
     	for(String keys: map.keySet()) {
     		Object matched =getMatchedValue(input_map, map.get(keys).toString());
     		if(matched != null)
     		map.put(keys, matched);
     		
     	}
-    	System.out.println(map);
+    	
     	
     	
     	int index=0 ;
     	for(Map<String,Object> in : innerList) {
     		Object val = getMatchedValue(input_map, in.get("name").toString());
-    		
     		in.put("value", val);
-    		
-    		
     		innerList.set(index, in);
     		index++;
     	}
@@ -101,10 +98,10 @@ public class MapToOutput {
     		//System.out.println(map);
     	}*/
     	
-    	map3.put("alarmAdditionalInformation",innerList );
+    	map2.put("alarmAdditionalInformation",innerList ); 
     	
     	insideLocal.put("commonEventHeader", map);
-    	insideLocal.put("faultFields", map3);
+    	insideLocal.put("faultFields", map2);
     	mainLocal.put("event", insideLocal);
     	
 

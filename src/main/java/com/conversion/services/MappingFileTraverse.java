@@ -21,7 +21,7 @@ public class MappingFileTraverse {
         Map<String,Object> value = new HashMap<>();
         traverseInputJson.traverserInput
                 (mapper.readTree(new File("MappingFile.json")));
-        System.out.println("**************************************************");
+       
 
         List<String> allKeys = traverseInputJson.getListOfKey();
         List<Object> allValues = traverseInputJson.getListOfValue();

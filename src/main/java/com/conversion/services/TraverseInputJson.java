@@ -21,7 +21,7 @@ public class TraverseInputJson {
         for(String key: rootMap.keySet()){
 
             if(rootMap.get(key) instanceof Map){
-               // rootNode = input.path(key);
+              
                 traverserInput(mapper.convertValue((rootMap.get(key)),JsonNode.class));
 
             }
@@ -37,14 +37,14 @@ public class TraverseInputJson {
                     }
                     if(obj instanceof String || obj instanceof Integer){
                     	output_map.put(key, obj);
-                        System.out.println(key+"-->"+obj);
+                       
                     }
                 }
 
             }
             if(rootMap.get(key) instanceof String || rootMap.get(key) instanceof Integer){
             	output_map.put(key, rootMap.get(key));
-                System.out.println(key+"-->"+rootMap.get(key));
+                
             }
         }
         return output_map;
