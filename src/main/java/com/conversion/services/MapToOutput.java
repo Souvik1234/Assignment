@@ -74,27 +74,60 @@ public class MapToOutput {
     	
     	for(String keys: map.keySet()) {
     		Object matched =getMatchedValue(input_map, map.get(keys).toString());
-    		if(matched != null)
-    		map.put(keys, matched);
+    		if(matched != null) {
+    			
+					map.put(keys, matched);
+			}
+    		if(map.get(keys).toString().contains("put_")) {
+    			map.put(keys,map.get(keys).toString().substring(4));
+    		}
+    		
+    		
     		
     	}
     	int index=0 ;
-    	for(Map<String,Object> in : innerList) {
-    		Object val = getMatchedValue(input_map, in.get("name").toString());
-    		in.put("value", val);
-    		innerList.set(index, in);
-    		index++;
+    	for(Map<String,Object> in : innerList) { //assigning values to key of aditionalalarmcondition field
+			Object val = getMatchedValue(input_map, in.get("name").toString());
+			in.put("value", val);
+			
+			innerList.set(index, in);
+			index++;
+			
+		}
+    	
+    	for(Map<String,Object> in : innerList) { //removing "put_" from value
+    	for (String keys:in.keySet()) {
+			
+			String modi=in.get(keys).toString();
+			
+			if(modi.contains("put_")) {
+			modi = modi.substring(4);
+			in.put("name", modi);
+			
+			}
+		}
     	}
     	
-    	System.out.println(map3);
     	for(String keys: map3.keySet()) {
     		Object matched =getMatchedValue(input_map, map3.get(keys).toString());
-    		if(matched != null)
-    		map4.put(keys, matched);
-    		
+    		if(matched != null) {
+				
+					map4.put(keys, matched);
+					
+			}
+    		if(map3.get(keys).toString().contains("put_")) {
+    			
+    			for(String keys_in: map2.keySet()) {
+    				if(map2.get(keys_in).toString().contains("put_")) {
+    					String modi = map2.get(keys_in).toString().substring(4);
+    					map2.put(keys_in,modi);	
+    				}
+    			}
+    		}
     	}
     	
     	map2.put("alarmAdditionalInformation",innerList ); 
+    	
     	insideLocal.put("faultFields", map4);
     	insideLocal.put("commonEventHeader", map);
     	insideLocal.put("faultFields", map2);
@@ -107,13 +140,29 @@ public class MapToOutput {
 
     private Object getMatchedValue(Map<String, Object> input_map,String inputKey){
         Object ret =null;
-        for(String keys: input_map.keySet()){
-            if(keys.equals(inputKey))
-                ret = input_map.get(keys);
-        }
+        if(inputKey.contains("put_")) {
+			inputKey = inputKey.substring(4);
+
+			for (String keys : input_map.keySet()) {
+				if (keys.equals(inputKey))
+					if (keys.equals("target")) {
+
+						ret = cutTargetCustomized(input_map.get(keys).toString());
+					} else {
+						ret = input_map.get(keys);
+					}
+			}
+		}
         return  ret;
 
     }
+
+    private Object cutTargetCustomized(String s){
+		String[] f = s.split("/");
+		String fo[] = f[1].split("=");
+		return fo[1];
+
+	}
 
 
 }
