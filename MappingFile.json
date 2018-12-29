@@ -1,6 +1,5 @@
 {
 	"event": {
-	
 		"commonEventHeader": {
 			"sourceId": "put_target",
 			"startEpochMicrosec": 1413378172000000,
